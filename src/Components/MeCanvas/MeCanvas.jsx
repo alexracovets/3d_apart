@@ -33,7 +33,7 @@ export default function MeCanvas() {
             camera={{ fov: 90, near: 0.1, far: 1000 }}
             className={cursorState ? s.onHover : s.unHover}
         >
-            <ambientLight intensity={1.6} />
+            <ambientLight intensity={2} />
             {modelRef && <InteractiveMesh intersect={modelRef.current.children} />}
             <Interior setModelRef={setModelRef} />
             {
