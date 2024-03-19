@@ -54,19 +54,11 @@ export default function Interior({ setModelRef }) {
 
     useEffect(() => {
 
-        setIsVisible(true);
-        gsap.to(materials['My_UV-texture_UVMAT'], {
-            opacity: 0.5,
-            duration: 0.8,
-            ease: "power2.inOut",
-            onComplete: () => {
-                materials['My_UV-texture_UVMAT'].opacity = 1
-            }
-        })
+        setIsVisible(true); 
         setTimeout(() => {
             setIsVisible(false);
         }, 800)
-    }, [hotspotsStateCurrent])
+    }, [hotspotsStateCurrent, materials])
 
     return (
         <group ref={modelRef}>
