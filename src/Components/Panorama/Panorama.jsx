@@ -2,36 +2,30 @@ import { Sphere } from "@react-three/drei";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from 'prop-types';
-import * as THREE from 'three'; 
+import * as THREE from 'three';
 
 Panorama.propTypes = {
-    rotation: PropTypes.array,
-    panoram: PropTypes.object
-}
+    panoram: PropTypes.array
+};
 
-export default function Panorama({ panoram, rotation }) {
+export default function Panorama({ panoram }) {
     const cameraState = useSelector((state) => state.stateCamera);
     const hotspotsStateCurrent = useSelector((state) => state.stateHotspots.current);
-    const [opacityParametr, setOpacityParametr] = useState({ opacity: 1 })
+    const [texture, setTexture] = useState(null);
 
     useEffect(() => {
-        setOpacityParametr({
-            opacity: 0
-        })
-        setTimeout(() => {
-            setOpacityParametr({
-                opacity: 1
-            })
-        }, 800)
-    }, [hotspotsStateCurrent]);
+        const finder = hotspotsStateCurrent.id;
+        const currentItem = panoram.find(item => item.id === finder);
+        setTexture(currentItem.texture)
+    }, [hotspotsStateCurrent.id, panoram])
 
     return (
-        <Sphere args={[10, 60, 60]} scale={[1, 1, -1]} position={cameraState.position} rotation={rotation}>
+        <Sphere args={[10, 60, 60]} scale={[1, 1, -1]} position={cameraState.position} rotation={hotspotsStateCurrent.textureRotation}>
             <meshStandardMaterial
-                map={panoram}
+                map={texture}
                 side={THREE.DoubleSide}
                 transparent
-                opacity={opacityParametr.opacity}
+                opacity={1}
             />
         </Sphere>
     );

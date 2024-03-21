@@ -9,31 +9,39 @@ import InteractiveMesh from "../InteractiveMesh/InteractiveMesh";
 import CircleHotspot from "../CircleHotspot/CircleHotspot";
 
 import s from './MeCanvas.module.scss';
+import MeCamera from "./MeCamera/MeCamera";
 
 export default function MeCanvas() {
     const [modelRef, setModelRef] = useState(null);
     const cursorState = useSelector((state) => state.stateCursor.isCursorHover);
     const hotspotsState = useSelector((state) => state.stateHotspots);
     const [texture, setTexture] = useState(null);
-    const textureLoader = new THREE.TextureLoader();
 
     useEffect(() => {
+        const textureLoader = new THREE.TextureLoader();
         const loadTexture = async () => {
-            const texture = await textureLoader.loadAsync(`panorams/${hotspotsState.current.id}.jpg`);
-            setTexture(texture);
+            const texturePromises = hotspotsState.hotspots.map(async (item) => {
+                const texture = await textureLoader.loadAsync(`panorams/${item.id}.jpg`);
+                return {
+                    texture,
+                    id: item.id
+                };
+            });
+
+            const loadedTextures = await Promise.all(texturePromises);
+            setTexture(loadedTextures);
         };
 
         loadTexture();
-    }, [hotspotsState.current]);
+    }, [hotspotsState.hotspots]);
 
     return (
         <Canvas
             dpr={window.devicePixelRatio}
-            gl={{ preserveDrawingBuffer: true }}
-            camera={{ fov: 90, near: 0.1, far: 1000 }}
             className={cursorState ? s.onHover : s.unHover}
         >
             <ambientLight intensity={2} />
+            <MeCamera />
             {modelRef && <InteractiveMesh intersect={modelRef.current.children} />}
             <Interior setModelRef={setModelRef} />
             {
@@ -44,7 +52,7 @@ export default function MeCanvas() {
                     return <CircleHotspot key={index} hotspot={hotspot} />
                 })
             }
-            <Panorama panoram={texture} rotation={hotspotsState.current.textureRotation} />
+            {texture && <Panorama panoram={texture} />}
             {/* <CircleHotspot position={[positionTest.x, positionTest.y, positionTest.z]} /> */}
         </Canvas>
     );

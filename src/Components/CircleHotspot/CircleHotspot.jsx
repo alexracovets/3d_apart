@@ -1,36 +1,38 @@
-import { useDispatch } from 'react-redux';
+import { useEffect, useState, memo, useRef, useCallback, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import PropTypes from "prop-types";
 import { Plane, Ring } from "@react-three/drei";
-import { useEffect, useState } from "react";
-import PropTypes from 'prop-types';
-import * as THREE from 'three';
-import gsap from 'gsap';
+import { DoubleSide } from "three";
+import gsap from "gsap";
 
-CircleHotspot.propTypes = {
-    hotspot: PropTypes.object
-}
 import { setIsCursorHover } from '../../store/reducers/stateCursor';
 import { setPosition } from '../../store/reducers/stateCamera';
 import { setCurrent } from '../../store/reducers/stateHotspots';
 
-export default function CircleHotspot({ hotspot }) {
-    const [isHover, setIsHover] = useState(false);
+const CircleHotspot = memo(({ hotspot }) => {
     const dispatch = useDispatch();
+    const [isHover, setIsHover] = useState(false);
+    const animParameter = useRef({ opacity: 0 }).current;
 
-    const [animParameter] = useState({ opacity: 0 });
-    const changeCameraPosition = (position) => {
-        dispatch(setPosition(position));
-        dispatch(setCurrent(hotspot))
-    }
+    const ringArgs = useMemo(() => [0.1, 0.17, 50, 1], []);
+    const planeArgs = useMemo(() => [0.5, 0.5], []);
+
+    const changeCameraPosition = useCallback(() => {
+        dispatch(setPosition(hotspot.cameraPosition));
+        dispatch(setCurrent(hotspot));
+    }, [hotspot.cameraPosition, hotspot]);
+
     useEffect(() => {
-        gsap.to(animParameter, {
+        const animation = gsap.to(animParameter, {
             opacity: isHover ? 1 : 0.3,
-            duration: 0.3
-        })
-    }, [isHover])
+            duration: 0.3,
+        });
+        return () => animation.kill();
+    }, [isHover]);
 
     useEffect(() => {
-        dispatch(setIsCursorHover(isHover))
-    }, [isHover])
+        dispatch(setIsCursorHover(isHover));
+    }, [isHover]);
 
     return (
         <mesh
@@ -38,15 +40,21 @@ export default function CircleHotspot({ hotspot }) {
             rotation={[Math.PI / 2, 0, 0]}
             onPointerEnter={() => setIsHover(true)}
             onPointerLeave={() => setIsHover(false)}
-            onClick={() => changeCameraPosition(hotspot.cameraPosition)}
+            onClick={changeCameraPosition}
         >
-            <Ring args={[0.1, 0.17, 50, 1]} >
-                <meshBasicMaterial color={"white"} side={THREE.DoubleSide} opacity={animParameter.opacity} transparent />
+            <Ring args={ringArgs}>
+                <meshBasicMaterial color="white" side={DoubleSide} opacity={animParameter.opacity} transparent />
             </Ring>
-            <Plane args={[0.5, 0.5]}>
-                <meshNormalMaterial side={THREE.DoubleSide} visible={false} />
+            <Plane args={planeArgs}>
+                <meshNormalMaterial side={DoubleSide} visible={false} />
             </Plane>
         </mesh>
-
     );
-}
+});
+
+CircleHotspot.displayName = 'CircleHotspot';
+CircleHotspot.propTypes = {
+    hotspot: PropTypes.object.isRequired,
+};
+
+export default CircleHotspot;
