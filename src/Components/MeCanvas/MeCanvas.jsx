@@ -44,8 +44,9 @@ export default function MeCanvas() {
         >
             <ambientLight intensity={2} />
             <MeCamera />
-            {modelRef && <InteractiveMesh intersect={modelRef.current.children} />}
+            <InteractiveMesh intersect={modelRef?.current?.children} />
             <Interior setModelRef={setModelRef} />
+            <Panorama panoram={texture} />
             {
                 hotspotsState.hotspots?.map((hotspot, index) => {
                     if (hotspot.hideIs.includes(hotspotsState.current.id)) {
@@ -54,8 +55,6 @@ export default function MeCanvas() {
                     return <CircleHotspot key={index} hotspot={hotspot} />
                 })
             }
-            {texture && <Panorama panoram={texture} />}
-            {/* <CircleHotspot position={[positionTest.x, positionTest.y, positionTest.z]} /> */}
         </Canvas>
     );
 }

@@ -49,7 +49,6 @@ export default function Marker({ position, normal }) {
                 <meshBasicMaterial color="white" side={THREE.DoubleSide} opacity={animParameter.opacityOuter} transparent visible={animParameter.opacityInner < 0.1 ? false : true} />
             </Ring>
         </mesh>
-
     );
 }
 

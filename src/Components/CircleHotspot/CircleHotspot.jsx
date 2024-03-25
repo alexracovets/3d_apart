@@ -20,7 +20,7 @@ const CircleHotspot = memo(({ hotspot }) => {
     const changeCameraPosition = useCallback(() => {
         dispatch(setPosition(hotspot.cameraPosition));
         dispatch(setCurrent(hotspot));
-    }, [hotspot.cameraPosition, hotspot]);
+    }, [hotspot, dispatch]);
 
     useEffect(() => {
         const animation = gsap.to(animParameter, {
@@ -28,11 +28,11 @@ const CircleHotspot = memo(({ hotspot }) => {
             duration: 0.3,
         });
         return () => animation.kill();
-    }, [isHover]);
+    }, [isHover, animParameter]);
 
     useEffect(() => {
         dispatch(setIsCursorHover(isHover));
-    }, [isHover]);
+    }, [isHover, dispatch]);
 
     return (
         <mesh
