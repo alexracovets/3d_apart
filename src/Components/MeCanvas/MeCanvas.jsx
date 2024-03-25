@@ -38,6 +38,8 @@ export default function MeCanvas() {
     return (
         <Canvas
             dpr={window.devicePixelRatio}
+            gl={{ preserveDrawingBuffer: true }}
+            camera={{ fov: 90, near: 0.1, far: 1000 }}
             className={cursorState ? s.onHover : s.unHover}
         >
             <ambientLight intensity={2} />
