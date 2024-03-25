@@ -18,7 +18,6 @@ export default function Panorama({ panoram }) {
         const currentItem = panoram.find(item => item.id === finder);
         setTexture(currentItem.texture)
     }, [hotspotsStateCurrent.id, panoram])
-
     return (
         <Sphere args={[10, 60, 60]} scale={[1, 1, -1]} position={cameraState.position} rotation={hotspotsStateCurrent.textureRotation}>
             <meshStandardMaterial

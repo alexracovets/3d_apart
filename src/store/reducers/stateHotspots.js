@@ -28,7 +28,7 @@ const stateHotspots = createSlice({
             {
                 position: [-2.7, 0.01, -2.25],
                 cameraPosition: [-2.823, 1.286, -1.791],
-                textureRotation: [-3.127, 3.10, -3.127],
+                textureRotation: [-3.09, 3.09, -3.21],
                 hideIs: [1, 3],
                 id: 3
             },

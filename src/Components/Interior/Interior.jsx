@@ -18,8 +18,8 @@ export default function Interior({ setModelRef }) {
     }, [setModelRef])
 
     useEffect(() => {
-        if (materials['My_UV-texture_UVMAT']) {
-            const material = materials['My_UV-texture_UVMAT'];
+        if (materials['Texture_1_UVMAT.003']) {
+            const material = materials['Texture_1_UVMAT.003'];
             material.transparent = true;
             material.opacity = 1;
             material.needsUpdate = true;
@@ -31,13 +31,13 @@ export default function Interior({ setModelRef }) {
         setIsVisible(true);
         setTimeout(() => {
             setIsVisible(false);
-        }, 800)
+        }, 700)
     }, [hotspotsStateCurrent])
-
+  
     return (
         <group ref={modelRef}>
             <mesh geometry={nodes.Plane4.geometry} visible={isVisible}>
-                <primitive object={materials['My_UV-texture_UVMAT']} attach="material" />
+                <primitive object={materials['Texture_1_UVMAT.003']} attach="material" />
             </mesh>
         </group>
     )
