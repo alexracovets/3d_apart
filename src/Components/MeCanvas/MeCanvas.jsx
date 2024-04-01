@@ -7,9 +7,10 @@ import Interior from "../Interior/Interior";
 import Panorama from "../Panorama/Panorama";
 import InteractiveMesh from "../InteractiveMesh/InteractiveMesh";
 import CircleHotspot from "../CircleHotspot/CircleHotspot";
+import MeCamera from "./MeCamera/MeCamera";
 
 import s from './MeCanvas.module.scss';
-import MeCamera from "./MeCamera/MeCamera";
+import Computers from "../Computers/Computers";
 
 export default function MeCanvas() {
     const [modelRef, setModelRef] = useState(null);
@@ -34,7 +35,6 @@ export default function MeCanvas() {
 
         loadTexture();
     }, [hotspotsState.hotspots]);
-
     return (
         <Canvas
             dpr={window.devicePixelRatio}
@@ -55,6 +55,12 @@ export default function MeCanvas() {
                     return <CircleHotspot key={index} hotspot={hotspot} />
                 })
             }
+            {
+                hotspotsState.current.computers?.map((computer, index) => {
+                    return <Computers key={index} computer={computer} />
+                })
+            }
+
         </Canvas>
     );
 }
